@@ -3,16 +3,42 @@ const express = require('express');
 
 const app = express();
 
-app.use("/hello", (req, res) => {
-    res.send("Hello from Namaste Node!!:)");
+//Order of routes matter!!!
+//If we put this route first, then it will be executed for all
+// the requests and the other routes will not be executed
+
+app.get("/user", (req, res) => {
+    res.send({ firstName: 'Vagdevi', LastName: 'Nanduri' });
 });
 
-app.use("/test", (req, res) => {
-    res.send("Hellooo!!!");
+app.post("/user", (req, res) => {
+    res.send("Saved Data to DB");
 });
 
-app.use("/", (req, res) => {
-    res.send("Hello from the Home Page");
+app.delete("/user", (req, res) => {
+    res.send("Successfully Deleted user from db");
 });
+
+
+// app.use("/hello/2", (req, res) => {
+//     res.send("Hello again from Namaste Node!!:)");
+// });
+
+// app.use("/hello", (req, res) => {
+//     res.send("Hello from Namaste Node!!:)");
+// });
+
+// //below code returns response same as /hello as /hello route overwrites this
+// app.use("/hello/3", (req, res) => {
+//     res.send("Hello again from Namaste Node 3rd time!!:)");
+// });
+
+// app.use("/test", (req, res) => {
+//     res.send("Hellooo!!!");
+// });
+
+// app.use("/", (req, res) => {
+//     res.send("Hello from the Home Page");
+// });
 
 app.listen(3000, () => console.log('Server is running on port 3000'));
