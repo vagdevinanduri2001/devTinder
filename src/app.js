@@ -3,63 +3,55 @@ const express = require('express');
 
 const app = express();
 
-//Order of routes matter!!!
-//If we put this route first, then it will be executed for all
-// the requests and the other routes will not be executed
+// Multiple route Handlers
+// rH --> route Handler
+// Below all are same. We can wrap in arrays.
+// app.use("/route", [rH1, rH2, rH3, rH4, rH5]);
+// app.use("/route", [rH1, rH2], rH3, rH4, rH5);
+// app.use("/route", rH1, rH2, [rH3, rH4], rH5);
 
+app.use("/user", [(req, res, next) => {
+    //This is a route Handler.
+    console.log("Response 1");
+    // res.send("Response 1");
+    next();
+},
+(req, res, next) => {
+    console.log("Response 2");
+    // res.send("Response 2");
+    next();
+}],
+    (req, res, next) => {
+        //This is a route Handler.
+        console.log("Response 3");
+        next();
+        // res.send("Response 3");
+    },
+    [(req, res, next) => {
+        //This is a route Handler.
+        console.log("Response 4");
+        next();
+        // res.send("Response 4");
+    },
+    (req, res, next) => {
+        //This is a route Handler.
+        console.log("Response 5");
+        next();
+        res.send("Response 5");
+        //next(); //without sending response //here gives "cannot get" error
+        //because it expects another route handler.
+    }]
+);
 
-//Patterns in the routes
-// /ab?c --> b is optional
-// /a(bc)?d --> bc is optional
-// /ab+c --> it works for /abc,/abbc,/abbbc,....
-// /ab*c --> it works for /abc,/abvagdevic, /abckejhfgrtgc,...
-// grouping works same as 2nd example for all
-
-// /a(bc)*d --> not working
-// /abc*d --> working
-// /abc+d --> not working
-// /ab?d --> not working
-app.get("/abc", (req, res) => {
-    res.send("abc");
+//We can also write/handle multiple route handlers like below.
+app.use("/users", (req, res, next) => {
+    console.log("Users 1");
+    // res.send("Users 1");
+    next();
 });
-
-
-// /user?userId=123&name=Vagdevi 
-// /user/:userId/:name
-app.get("/user/:userId/:name", (req, res) => {
-    // console.log(req.query);
-    console.log(req.params);
-    res.send({ firstName: 'Vagdevi', LastName: 'Nanduri' });
+app.use("/users", (req, res) => {
+    console.log("Users 2");
+    res.send("Users 2");
 });
-
-app.post("/user", (req, res) => {
-    res.send("Saved Data to DB");
-});
-
-app.delete("/user", (req, res) => {
-    res.send("Successfully Deleted user from db");
-});
-
-
-// app.use("/hello/2", (req, res) => {
-//     res.send("Hello again from Namaste Node!!:)");
-// });
-
-// app.use("/hello", (req, res) => {
-//     res.send("Hello from Namaste Node!!:)");
-// });
-
-// //below code returns response same as /hello as /hello route overwrites this
-// app.use("/hello/3", (req, res) => {
-//     res.send("Hello again from Namaste Node 3rd time!!:)");
-// });
-
-// app.use("/test", (req, res) => {
-//     res.send("Hellooo!!!");
-// });
-
-// app.use("/", (req, res) => {
-//     res.send("Hello from the Home Page");
-// });
 
 app.listen(3000, () => console.log('Server is running on port 3000'));
