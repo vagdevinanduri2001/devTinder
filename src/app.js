@@ -7,7 +7,28 @@ const app = express();
 //If we put this route first, then it will be executed for all
 // the requests and the other routes will not be executed
 
-app.get("/user", (req, res) => {
+
+//Patterns in the routes
+// /ab?c --> b is optional
+// /a(bc)?d --> bc is optional
+// /ab+c --> it works for /abc,/abbc,/abbbc,....
+// /ab*c --> it works for /abc,/abvagdevic, /abckejhfgrtgc,...
+// grouping works same as 2nd example for all
+
+// /a(bc)*d --> not working
+// /abc*d --> working
+// /abc+d --> not working
+// /ab?d --> not working
+app.get("/abc", (req, res) => {
+    res.send("abc");
+});
+
+
+// /user?userId=123&name=Vagdevi 
+// /user/:userId/:name
+app.get("/user/:userId/:name", (req, res) => {
+    // console.log(req.query);
+    console.log(req.params);
     res.send({ firstName: 'Vagdevi', LastName: 'Nanduri' });
 });
 
